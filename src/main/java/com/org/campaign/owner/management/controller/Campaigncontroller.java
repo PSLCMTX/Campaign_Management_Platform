@@ -12,39 +12,31 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.org.campaign.owner.management.model.Campaignmodel;
-import com.org.campaign.owner.management.repository.Campaignrepository;
-import com.org.campaign.owner.management.service.Campaignservice;
+import com.org.campaign.owner.management.model.CampaignModel;
+import com.org.campaign.owner.management.repository.CampaignRepository;
+import com.org.campaign.owner.management.service.CampaignService;
 
 @RestController
 @RequestMapping(path = "/api/campaign")
-public class Campaigncontroller {
+public class CampaignController {
 	@Autowired
-	private Campaignservice campaignservice;
-	@Autowired
-	private Campaignrepository campaignrepository;
-	
-	@GetMapping(path = "/get")
-	public List<String> getdata(){
-		return campaignservice.getdetails();
+	private CampaignService campaignservice;
+
+	@PostMapping(path = "/owner")
+	public CampaignModel addcampaignmodel(@RequestBody CampaignModel campaign) {
+		return campaignservice.addcampaignmodel(campaign);
+
 	}
-	
-	
-	@PostMapping(path = "/create")
-	public Campaignmodel addcampaignmodel(@RequestBody Campaignmodel campaign){
-		campaignservice.addcampaignmodel(campaign); 
-		return campaignrepository.save(campaign);
-		//return campaignservice.addcampaignmodel(campaign); 
+
+	@GetMapping(path = "/owner/{CampaignOwnerId}")
+	public Optional<CampaignModel> getOwnerDetails(@PathVariable("CampaignOwnerId") int CampaignOwnerId) {
+		return campaignservice.getOwnerDetails(CampaignOwnerId);
 	}
-	
-	@GetMapping(path = "/getCampaignOwnerId/{CampaignOwnerId}")
-	public Optional<Campaignmodel> getOwnerDetails(@PathVariable("CampaignOwnerId") int CampaignOwnerId){
-	return campaignservice.getOwnerDetails(CampaignOwnerId);
+
+	@PutMapping(path = "/owner/{CampaignOwnerId}")
+	public Optional<CampaignModel> updateOwnerDetails(@PathVariable("CampaignOwnerId") int CampaignOwnerId,
+			@RequestBody CampaignModel campaign) {
+		return campaignservice.updateOwnerDetails(CampaignOwnerId, campaign);
 	}
-	
-	@PutMapping(path = "/updateCampaignOwnerDetails/{CampaignOwnerId}")
-	public Optional<Campaignmodel> updateOwnerDetails(@PathVariable("CampaignOwnerId") int CampaignOwnerId, @RequestBody Campaignmodel campaign){
-	return campaignservice.updateOwnerDetails(CampaignOwnerId, campaign);
-	}
-	
+
 }
